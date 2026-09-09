@@ -1,0 +1,20 @@
+# 默认由 Git 自行判断
+* text=auto
+
+# 这些文件要在 Linux 上执行/解析，必须是 LF。
+# 否则 shell 脚本会报 bad interpreter: ...^M
+*.sh          text eol=lf
+Dockerfile    text eol=lf
+*.dockerignore text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+*.conf        text eol=lf
+
+# Windows 专用脚本保持 CRLF
+*.ps1         text eol=crlf
+
+# 二进制，别做任何转换
+*.db          binary
+*.png         binary
+*.jpg         binary
+*.ico         binary
