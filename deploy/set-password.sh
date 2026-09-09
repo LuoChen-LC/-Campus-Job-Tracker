@@ -20,7 +20,8 @@ fi
 
 # 借 httpd 镜像算 bcrypt，免得在宿主机装 apache2-utils
 docker run --rm httpd:2.4-alpine htpasswd -nbB "$USER_NAME" "$PASSWORD" > deploy/htpasswd
-chmod 600 deploy/htpasswd
+# Nginx worker 以 nginx 用户运行，600 会让它读不到文件而返回 500
+chmod 644 deploy/htpasswd
 
 echo "已写入 deploy/htpasswd"
 echo "如果 web 容器已在运行： docker compose restart web"
