@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+backend/.venv/
+backend/data/*.db
+
+# Node
+node_modules/
+frontend/dist/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 构建产物
+frontend/tsconfig.tsbuildinfo
+
+# 部署密钥与本地配置
+.env
+deploy/htpasswd
+backups/

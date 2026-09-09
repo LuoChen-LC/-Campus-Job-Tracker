@@ -1,0 +1,35 @@
+services:
+  backend:
+    build: ./backend
+    image: campus-tracker-backend
+    restart: unless-stopped
+    environment:
+      # 四个斜杠 = 容器内绝对路径 /app/data/tracker.db
+      DATABASE_URL: sqlite:////app/data/tracker.db
+      TZ: ${TZ:-Asia/Shanghai}
+    volumes:
+      # SQLite 落在宿主机上，备份就是拷这一个文件
+      - ./backend/data:/app/data
+    # 故意不写 ports：后端只在 compose 内网可达，公网只能过 Nginx
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3).status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  web:
+    build: ./frontend
+    image: campus-tracker-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    volumes:
+      # 口令文件不进镜像，改密码后 restart 即可生效
+      - ./deploy/htpasswd:/etc/nginx/htpasswd:ro
+    depends_on:
+      backend:
+        condition: service_started
